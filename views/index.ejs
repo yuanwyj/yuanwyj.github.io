@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>主页</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./stylesheets/index.css">
+  </head>
+  <body>
+    <header >
+        <div class="page-header">
+            <h1><%= title %><small>It's a blog system writeten by nodejs</small></h1> 
+            <% if(!user) { %>
+            <div class="user-header">
+                <p>
+                    <a href="/login">登陆</a>
+                    <a href="/register" id="reg">注册</a>
+                </p>               
+            </div>
+            <% } else { %>
+            <div class="user-header">
+                <p>
+                    <a href="#"><%= user.username %></a>
+                    <a href="/logout">安全退出</a>
+                </p>
+            </div>
+            <% } %>
+        </div>   	
+    </header>
+
+    <!-- 编辑blog模块 -->
+    <div id="post-blog" class="post-blog" style="display: none;">
+        <div class="mask"></div>
+        <div class="blog-form">
+            <div class="blog-form-header">
+                <p>编辑博客</p>
+                <a href="#" id="form-close">
+                    <span>关闭</span>               
+                </a>
+            </div>           
+            <form action="/addblog" method="post">
+                <input id="blog-title" type="text" name="title" placeholder="文章标题不能为空" class="blog-form-title" autofocus autocomplete="off">
+                <div class="edit">
+                    <div class="edit-btn"></div>
+                    <div class="edit-content">
+                        <div class="edit-btn">
+                            <ul class="nav nav-pills">
+                                <li><a id ="resetting">重置</a></li>
+                                <li><a id="center">居中</a></li>
+                                <li><a id="left">居左</a></li>
+                                <li><a id="right">居右</a></li>
+                            </ul>  
+                        </div>
+                         <div class="err-message">
+                            
+                        </div>
+                        <textarea class="form-control" rows="9" name="content"></textarea>
+                       
+                        <button id="issue" type="submit" class="btn btn-primary">发布</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3">
+            <!--Sidebar content-->
+                <div class="pop-blog">
+                    <h3 class="text-info">Hot blog</h3>
+                    <ul class="unstyled">
+                    <% for(var i = 0; i < blogs.length; i++ ) { %>
+
+                        <li>
+                            <a href="/blog/<%- blogs[i]._id %>" class="blogTitle"><%= blogs[i].title %></a>
+                            <p class="muted">赞 <%= blogs[i].recommend %></p>
+                                
+                        </li>  
+                    <% } %>                         
+                    </ul>
+                </div>
+
+            </div>
+            <div class="span9">
+            <!--Body content-->
+
+                <% if(!user) { %>
+                    <!-- If user is not login show this model  -->
+                    <div class="row-fluid">
+                        <div class="span9">
+                            <div class="top-nav">
+                                <ul class="nav nav-pills">
+                                    <li class="disabled"><a href="#">首页</a></li>
+                                    <li class="disabled"><a href="#">个人主页</a></li>
+                                    <li class="disabled"><a href="#" id="issue-blog">发布博客</a></li>
+                                    <li class="disabled"><a href="#"></a></li>
+                                </ul>
+                            </div>
+                            <div class="imgbos">
+                               
+                            </div>
+                        </div>
+                        <div class="span3">
+                            <!-- Here to search blog -->
+                            <div class="right-top">
+                                <h3>Search blog</h3>
+                            </div>
+                            <div class="infosearch">                           
+                            </div>
+                            <input type="text" name="blogInfo" class="input-medium searchInfo" placeholder="find blog..." autocomplete="off">
+                            <button id="searchblog" type="submit" class="btn searchblog">Search</button>
+                            <ul id="blogresult" class="unstyled blogresult">
+                               
+                            </ul>                                                              
+                        </div>
+                    </div>
+
+                <% } else {%>
+                    <div class="my-blog container-fulid">
+                        <div class="row-fluid">
+                            <div class="span9">
+                                <div class="top-nav">
+                                    <ul class="nav nav-pills">
+
+                                        <li class="disabled"><a href="/blog">首页</a></li>
+                                        <li class="disabled"><a href="#">个人主页</a></li>
+                                        <li class="disabled"><a href="#" id="issue-blog">发布博客</a></li>
+                                        <li class="disabled"><a href="#"></a></li>
+
+                                    </ul>
+                                </div>
+                               
+
+                                <div class="blog">
+
+                                    <h3>我的博客</h3>
+                                    <ul class="unstyled">
+                                        <% for(var i = 0; i < blog.length; i++ ) { %>
+                                        
+                                        <li>
+                                            <div class="li">
+                                            <a href="/blog/<%- blog[i]._id %>" class="blogTitle"><%= blog[i].title %></a></br>
+                                            <span>我发布于<strong><%= blog[i].time.getFullYear() %>/<%= blog[i].time.getMonth()+1 %>/<%= blog[i].time.getDate() %></strong>  <p class="muted">赞<%= blog[i].recommend %></p></span>
+                                            </div>
+                                        </li>  
+                                        <% } %>                                      
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="span3">
+                            <!-- Search blog model -->
+                                <div class="right-top">
+                                    <h3>Search blog</h3>
+                                </div>
+                                <div class="infosearch">                           
+                                </div>
+                                <input type="text" name="blogInfo" class="input-medium searchInfo" placeholder="find blog..." autocomplete="off">
+                                <button id="searchblog" type="submit" class="btn searchblog">Search</button>
+                                <ul id="blogresult" class="unstyled blogresult">
+                               
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p><small>&copy;Copyring All About Gaudi</small></p>
+    </footer> 
+        <script src="./javascripts/jquery.min.js" type="text/javascript"></script>
+        <script src="./javascripts/index.js" ></script>        
+    </body>
+</html>
